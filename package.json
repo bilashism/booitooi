@@ -1,0 +1,91 @@
+{
+  "name": "book-catalog-app",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@8.6.7",
+  "author": "Md. Taifuzzaman Bilash <bilashism@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilashism/book-catalog-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bilashism/book-catalog-app/issues"
+  },
+  "homepage": "https://github.com/bilashism/book-catalog-app#readme",
+  "description": "Book catalog app frontend web application",
+  "main": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "lint": "eslint src --ext .tsx --ext .ts",
+    "lint:fix": "pnpm run lint --fix",
+    "format": "prettier --config ./.prettierrc -w src/**/*.{js,jsx,ts,tsx,css,html,json} && pnpm run lint:fix && git update-index",
+    "pretest": "pnpm run lint:fix",
+    "test": "jest --colors --passWithNoTests",
+    "posttest": "npx http-server coverage/lcov-report",
+    "test:watch": "pnpm run test --collectCoverage=false --watch",
+    "prepare": "husky install",
+    "cz": "cz"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "eslint"
+    ],
+    "*.{json,css}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "clsx": "^1.2.1",
+    "firebase": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.10",
+    "react-redux": "^8.1.1",
+    "react-router-dom": "^6.14.1",
+    "tailwind-merge": "^1.13.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.8",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.3",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@types/react-redux": "^7.1.25",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "lint-staged": "^13.2.3",
+    "postcss": "^8.4.25",
+    "prettier": "^3.0.0",
+    "rollup": "^3.26.2",
+    "tailwindcss": "^3.3.2",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.3",
+    "vite-plugin-mkcert": "^1.16.0"
+  }
+}
