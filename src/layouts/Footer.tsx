@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom';
 
+import { Logo } from '../components/Logo';
+
 export const Footer = () => (
   <footer className="relative bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20">
     <div className="container mx-auto px-4">
       <div className="flex flex-wrap -mx-4">
         <div className="w-full px-4 sm:w-2/3 lg:w-3/12">
           <div className="w-full mb-16">
-            <Link
-              to="/"
-              className="inline-flex justify-center items-center px-2 py-2 w-8 h-8 shadow-lg shadow-orange-400 font-bold italic bg-purple-600 text-white rounded-full uppercase"
-            >
-              <span>BT</span>
-            </Link>
+            <Logo />
+
             <p className="text-base mb-7 text-body-color pt-8">
               Sed ut perspiciatis undmnis is iste natus error sit amet
               voluptatem totam rem aperiam.

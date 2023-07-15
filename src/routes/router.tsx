@@ -8,6 +8,8 @@ import { lazyNamed } from '../utils/lazyNamed';
 import { PrivateRoute } from './PrivateRoute';
 
 const Home = lazyNamed('Home', () => import('../pages/Home'));
+const SignIn = lazyNamed('SignIn', () => import('../pages/SignIn'));
+const SignUp = lazyNamed('SignUp', () => import('../pages/SignUp'));
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +21,22 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/login',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SignIn />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/signup',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SignUp />
           </Suspense>
         ),
       },

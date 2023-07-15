@@ -1,6 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 
+import { Logo } from '../components/Logo';
 import { auth } from '../lib/firebase';
 import { setUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -17,12 +18,7 @@ export const Navbar = () => {
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="h-full w-full bg-white/60">
         <div className="container flex items-center justify-between w-full h-full mx-auto px-2 2xl:px-4 ">
-          <Link
-            to="/"
-            className="inline-flex justify-center items-center px-2 py-2 w-8 h-8 shadow-lg shadow-orange-400 font-bold italic bg-purple-600 text-white rounded-full uppercase"
-          >
-            <span>BT</span>
-          </Link>
+          <Logo />
           <ul className="flex items-center gap-2 2xl:gap-3">
             <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
               <Link to="/">Home</Link>
