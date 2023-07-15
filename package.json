@@ -27,7 +27,8 @@
     "posttest": "npx http-server coverage/lcov-report",
     "test:watch": "pnpm run test --collectCoverage=false --watch",
     "prepare": "husky install",
-    "cz": "cz"
+    "cz": "cz",
+    "build:deploy": "pnpm run build && firebase deploy"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
