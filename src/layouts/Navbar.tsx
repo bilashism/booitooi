@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
 import { auth } from '../lib/firebase';
@@ -21,19 +21,27 @@ export const Navbar = () => {
           <Logo />
           <ul className="flex items-center gap-2 2xl:gap-3">
             <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-              <Link to="/">Home</Link>
+              <NavLink to="/" className="[&.active]:text-purple-800">
+                Home
+              </NavLink>
             </li>
             <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-              <Link to="/books">All Books</Link>
+              <NavLink to="/books" className="[&.active]:text-purple-800">
+                All Books
+              </NavLink>
             </li>
 
             {!user?.email ? (
               <>
                 <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-                  <Link to="/login">Login</Link>
+                  <NavLink to="/login" className="[&.active]:text-purple-800">
+                    Login
+                  </NavLink>
                 </li>
                 <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-                  <Link to="/signup">Signup</Link>
+                  <NavLink to="/signup" className="[&.active]:text-purple-800">
+                    Signup
+                  </NavLink>
                 </li>
               </>
             ) : (
