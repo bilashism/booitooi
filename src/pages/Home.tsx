@@ -3,7 +3,12 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import { ErrorFallback } from '../error/ErrorFallback';
 import { logError } from '../error/logError';
+import { lazyNamed } from '../utils/lazyNamed';
 
+const RecentlyAddedBooks = lazyNamed(
+  'RecentlyAddedBooks',
+  () => import('../layouts/RecentlyAddedBooks')
+);
 type IProps = {
   error: boolean;
 };
@@ -171,6 +176,7 @@ export const Home = () => {
       onReset={handleReset}
     >
       <HomeElement error={isError} />
+      <RecentlyAddedBooks />
     </ErrorBoundary>
   );
 };
