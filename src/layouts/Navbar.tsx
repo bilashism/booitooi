@@ -39,7 +39,10 @@ export const Navbar = () => {
                   </NavLink>
                 </li>
                 <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-                  <NavLink to="/signup" className="[&.active]:text-purple-800">
+                  <NavLink
+                    to="/signup"
+                    className="[&.active]:text-purple-800 border border-purple-500 rounded-md px-2 py-1"
+                  >
                     Signup
                   </NavLink>
                 </li>
