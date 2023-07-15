@@ -27,7 +27,7 @@ export const SignUp = () => {
                   className="border-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition bg-purple-500 hover:bg-opacity-90"
                   type="submit"
                 >
-                  Sign In
+                  Sign Up
                 </button>
               </div>
             </form>
