@@ -10,6 +10,7 @@ import { PrivateRoute } from './PrivateRoute';
 const Home = lazyNamed('Home', () => import('../pages/Home'));
 const SignIn = lazyNamed('SignIn', () => import('../pages/SignIn'));
 const SignUp = lazyNamed('SignUp', () => import('../pages/SignUp'));
+const AllBooks = lazyNamed('AllBooks', () => import('../pages/AllBooks'));
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <SignUp />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/books',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <AllBooks />
           </Suspense>
         ),
       },
