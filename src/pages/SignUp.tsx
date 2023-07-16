@@ -1,10 +1,11 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
-import { createUser } from '../redux/features/user/userSlice';
+import { createUser, setUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { extractStringsFromParentheses } from '../utils/utils';
 
@@ -31,13 +32,21 @@ export const SignUp = () => {
       createUser({ email: formData.email, password: formData.password })
     ).then(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data: any) => {
+      async (data: any) => {
         if (data?.error?.message) {
           toast(extractStringsFromParentheses(data?.error?.message));
           // toast(data?.error?.message);
         } else {
-          navigate(from, { replace: true });
-          toast(`Signed up successfully with: ${data?.payload}`);
+          await axios({
+            method: 'post',
+            url: 'http://localhost:5000/api/v1/auth/login',
+            data: { email: formData.email, password: formData.password },
+          }).then((loginData) => {
+            // console.log(loginData);
+            // setUser()
+            navigate(from, { replace: true });
+            toast(`Signed up successfully with: ${data?.payload?.email}`);
+          });
         }
       }
     );

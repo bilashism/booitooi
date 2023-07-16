@@ -14,6 +14,9 @@ import { auth } from '../../../lib/firebase';
 interface IUserState {
   user: {
     email: string | null;
+    uid: string | null;
+    id: string | null;
+    role: string | null;
   };
   isLoading: boolean;
   isError: boolean;
@@ -26,6 +29,9 @@ interface ICredentials {
 const initialState: IUserState = {
   user: {
     email: null,
+    uid: null,
+    id: null,
+    role: null,
   },
   isLoading: false,
   isError: false,
@@ -39,7 +45,12 @@ type IUserDB = {
   emailVerified: boolean;
   displayName: string;
 };
-
+type IAuthenticatedUser = {
+  uid: string;
+  email: string;
+  id: string;
+  role: string;
+};
 // Check if a user exists with the provided email
 const checkUserExists = async (email: string): Promise<boolean> => {
   let isInFirebase: boolean;
@@ -77,62 +88,23 @@ export const createUser = createAsyncThunk(
     };
 
     const {
-      data: {
-        data: { email: dbEmail },
-      },
+      data: { data: savedData },
     } = await axios({
       method: 'post',
       url: 'http://localhost:5000/api/v1/auth/signup',
       data: userDbData,
     });
+    const validUser: IAuthenticatedUser = {
+      email: savedData.email,
+      id: savedData.id,
+      role: savedData.role,
+      uid: savedData.uid,
+    };
     // eslint-disable-next-line consistent-return
-    return dbEmail;
+    return validUser;
   }
 );
-// export const createUser = createAsyncThunk(
-//   'user/createUser',
-//   async ({ email, password }: ICredentials) => {
-//     let userEmail: string;
-//     const isInFirebase = await checkUserExists(email);
 
-//     const {
-//       data: { data: isInDb },
-//     } = await axios({
-//       method: 'get',
-//       url: `http://localhost:5000/api/v1/users/check/${email}`,
-//     });
-
-//     if (!isInFirebase && !isInDb) {
-//       await createUserWithEmailAndPassword(auth, email, password).then(
-//         async (newUser) => {
-//           console.log(newUser.user);
-//           if (!newUser?.user?.email) {
-//             console.log('Something went wrong while creating new user');
-//             return;
-//           }
-
-//           const userDbData: IUserDB = {
-//             password,
-//             uid: newUser.user.uid,
-//             email: newUser.user.email,
-//             emailVerified: newUser.user.emailVerified,
-//             displayName: newUser.user.displayName || '',
-//           };
-
-//           const { data: dbData } = await axios<IUserDB>({
-//             method: 'post',
-//             url: 'http://localhost:5000/api/v1/auth/signup',
-//             data: userDbData,
-//           });
-
-//           userEmail = dbData.email;
-//         }
-//       );
-//     }
-
-//     return userEmail;
-//   }
-// );
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async ({ email, password }: ICredentials) => {
@@ -163,7 +135,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.error = null;
-        state.user.email = action.payload as string;
+        state.user = action.payload as IAuthenticatedUser;
       })
       .addCase(createUser.rejected, (state, action) => {
         state.isLoading = false;
