@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
 import { createUser } from '../redux/features/user/userSlice';
@@ -22,6 +22,9 @@ export const SignUp = () => {
     formState: { errors },
   } = useForm<SignupFormInputs>();
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || '/';
+  const navigate = useNavigate();
 
   const onSubmit = (formData: SignupFormInputs) => {
     dispatch(
@@ -32,6 +35,8 @@ export const SignUp = () => {
         if (data?.error?.message) {
           toast(extractStringsFromParentheses(data?.error?.message));
         } else {
+          navigate(from, { replace: true });
+
           toast(`Signed up successfully with: ${data?.meta?.arg?.email}`);
         }
       }
