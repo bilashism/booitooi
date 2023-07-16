@@ -9,11 +9,6 @@ import { useAppDispatch } from './redux/hooks';
 
 export const App = () => {
   const dispatch = useAppDispatch();
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log(count);
-  }, []);
 
   useEffect(() => {
     dispatch(setLoading(true));

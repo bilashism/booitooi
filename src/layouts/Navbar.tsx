@@ -1,13 +1,15 @@
+/* eslint-disable no-nested-ternary */
 import { signOut } from 'firebase/auth';
 import { NavLink } from 'react-router-dom';
 
+import { LoadingCircle } from '../components/LoadingCircle';
 import { Logo } from '../components/Logo';
 import { auth } from '../lib/firebase';
 import { setUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 export const Navbar = () => {
-  const { user } = useAppSelector((state) => state.user);
+  const { user, isLoading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const handleLogOut = () => {
     signOut(auth).then(() => {
@@ -31,7 +33,9 @@ export const Navbar = () => {
               </NavLink>
             </li>
 
-            {!user?.email ? (
+            {isLoading ? (
+              <LoadingCircle />
+            ) : !user?.email ? (
               <>
                 <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
                   <NavLink to="/login" className="[&.active]:text-purple-800">

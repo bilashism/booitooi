@@ -34,10 +34,10 @@ export const SignUp = () => {
       (data: any) => {
         if (data?.error?.message) {
           toast(extractStringsFromParentheses(data?.error?.message));
+          // toast(data?.error?.message);
         } else {
           navigate(from, { replace: true });
-
-          toast(`Signed up successfully with: ${data?.meta?.arg?.email}`);
+          toast(`Signed up successfully with: ${data?.payload}`);
         }
       }
     );

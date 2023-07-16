@@ -14,8 +14,6 @@ type IProps = {
 };
 
 const HomeElement = (props: IProps) => {
-  console.log('Home Element props', props);
-
   // if (props.error) {
   //   throw new Error('hello error world');
   // }
@@ -166,7 +164,7 @@ export const Home = () => {
   const handleReset = (details: any) => {
     // Reset the state of your app so the error doesn't happen again
     setIsError(false);
-    console.log(details);
+    // console.log(details);
   };
 
   return (
