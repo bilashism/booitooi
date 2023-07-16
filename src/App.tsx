@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 import { MainLayout } from './layouts/MainLayout';
 import { auth } from './lib/firebase';
@@ -28,7 +29,7 @@ export const App = () => {
 
   return (
     <div>
-      {/* <Toaster /> */}
+      <Toaster />
       <MainLayout />
     </div>
   );

@@ -1,10 +1,43 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
+import { createUser } from '../redux/features/user/userSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { extractStringsFromParentheses } from '../utils/utils';
+
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
+
+interface SignupFormInputs {
+  email: string;
+  password: string;
+}
 
 export const SignUp = () => {
-  const [dg, setdg] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormInputs>();
+  const dispatch = useAppDispatch();
+
+  const onSubmit = (formData: SignupFormInputs) => {
+    dispatch(
+      createUser({ email: formData.email, password: formData.password })
+    ).then(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (data: any) => {
+        if (data?.error?.message) {
+          toast(extractStringsFromParentheses(data?.error?.message));
+        } else {
+          toast(`Signed up successfully with: ${data?.meta?.arg?.email}`);
+        }
+      }
+    );
+  };
+
   return (
     <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
       <div className="container mx-auto">
@@ -13,15 +46,28 @@ export const SignUp = () => {
             <div className="mb-10 text-center md:mb-16">
               <Logo />
             </div>
-            <form>
-              <InputBox type="text" name="name" placeholder="Your name" />
-              <InputBox type="email" name="email" placeholder="Email" />
-              <InputBox
-                type="password"
-                name="password"
-                placeholder="Password"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
+              <input
+                type="email"
+                placeholder="Email"
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                {...register('email', {
+                  required: 'Please enter your email address',
+                })}
               />
-
+              {errors.email && <p>{errors.email.message}</p>}
+              <input
+                type="password"
+                placeholder="Password"
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                {...register('password', {
+                  required: 'Please enter your password',
+                })}
+              />
+              {errors.password && <p>{errors.password.message}</p>}
               <div className="mb-10">
                 <button
                   className="border-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition bg-purple-500 hover:bg-opacity-90"
@@ -31,7 +77,7 @@ export const SignUp = () => {
                 </button>
               </div>
             </form>
-            <p className="mb-6 text-base text-[#adadad]">Connect With</p>
+            {/* <p className="mb-6 text-base text-[#adadad]">Connect With</p>
             <ul className="-mx-2 mb-12 flex justify-between">
               <li className="w-full px-2">
                 <a
@@ -90,15 +136,16 @@ export const SignUp = () => {
                   </svg>
                 </a>
               </li>
-            </ul>
+            </ul> 
             <a
               href="/#"
               className="mb-2 inline-block text-base text-[#adadad] hover:text-primary hover:underline"
             >
               Forget Password?
             </a>
+             */}
             <p className="text-base text-[#adadad]">
-              Not a member yet?
+              Already a member?{' '}
               <Link to="/login" className="text-primary hover:underline">
                 Sign In
               </Link>
@@ -327,22 +374,3 @@ export const SignUp = () => {
     </section>
   );
 };
-
-const InputBox = ({
-  type,
-  placeholder,
-  name,
-}: {
-  type: string;
-  placeholder: string;
-  name: string;
-}) => (
-  <div className="mb-6">
-    <input
-      type={type}
-      placeholder={placeholder}
-      name={name}
-      className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
-    />
-  </div>
-);

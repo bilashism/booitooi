@@ -30,7 +30,7 @@ export const SignIn = () => {
                 </button>
               </div>
             </form>
-            <p className="mb-6 text-base text-[#adadad]">Connect With</p>
+            {/* <p className="mb-6 text-base text-[#adadad]">Connect With</p>
             <ul className="-mx-2 mb-12 flex justify-between">
               <li className="w-full px-2">
                 <a
@@ -90,14 +90,14 @@ export const SignIn = () => {
                 </a>
               </li>
             </ul>
-            <a
+             <a
               href="/#"
               className="mb-2 inline-block text-base text-[#adadad] hover:text-primary hover:underline"
             >
               Forget Password?
-            </a>
+            </a> */}
             <p className="text-base text-[#adadad]">
-              Not a member yet?
+              Not a member yet?{' '}
               <Link to="/signup" className="text-primary hover:underline">
                 Sign Up
               </Link>
