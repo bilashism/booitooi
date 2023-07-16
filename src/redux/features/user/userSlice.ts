@@ -13,10 +13,10 @@ import { auth } from '../../../lib/firebase';
 
 interface IUserState {
   user: {
-    email: string | null;
-    uid: string | null;
-    id: string | null;
-    role: string | null;
+    email: string;
+    uid: string;
+    id: string;
+    role: string;
   };
   isLoading: boolean;
   isError: boolean;
@@ -28,10 +28,10 @@ interface ICredentials {
 }
 const initialState: IUserState = {
   user: {
-    email: null,
-    uid: null,
-    id: null,
-    role: null,
+    email: '',
+    uid: '',
+    id: '',
+    role: '',
   },
   isLoading: false,
   isError: false,
@@ -94,6 +94,7 @@ export const createUser = createAsyncThunk(
       url: 'http://localhost:5000/api/v1/auth/signup',
       data: userDbData,
     });
+
     const validUser: IAuthenticatedUser = {
       email: savedData.email,
       id: savedData.id,
@@ -108,16 +109,42 @@ export const createUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async ({ email, password }: ICredentials) => {
-    const data = await signInWithEmailAndPassword(auth, email, password);
-    return data.user.email;
+    const loggedInUser = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const loginData = await axios({
+      method: 'post',
+      url: 'http://localhost:5000/api/v1/auth/login',
+      data: { email, password },
+    });
+    if (!loginData?.data?.data?.accessToken) return;
+    const {
+      data: { data: savedData },
+    } = await axios({
+      method: 'get',
+      url: `http://localhost:5000/api/v1/users/email/${email}`,
+    });
+
+    const validUser: IAuthenticatedUser = {
+      email: savedData.email,
+      id: savedData.id,
+      role: savedData.role,
+      uid: savedData.uid,
+    };
+    // eslint-disable-next-line consistent-return
+    return validUser;
   }
 );
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<string | null>) => {
-      state.user.email = action.payload;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setUser: (state, action: PayloadAction<any | null>) => {
+      state.user = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -129,7 +156,12 @@ export const userSlice = createSlice({
         state.isLoading = true;
         state.isError = false;
         state.error = null;
-        state.user.email = null;
+        state.user = {
+          email: '',
+          uid: '',
+          id: '',
+          role: '',
+        };
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -141,26 +173,31 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message as string;
-        state.user.email = null;
+        state.user = { email: '', uid: '', id: '', role: '' };
       });
     builder
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.error = null;
-        state.user.email = null;
+        state.user = {
+          email: '',
+          uid: '',
+          id: '',
+          role: '',
+        };
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.error = null;
-        state.user.email = action.payload;
+        state.user = action.payload as IAuthenticatedUser;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message as string;
-        state.user.email = null;
+        state.user = { email: '', uid: '', id: '', role: '' };
       });
   },
 });

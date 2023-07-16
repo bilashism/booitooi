@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -10,7 +11,7 @@ import {
 } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
-import { loginUser } from '../redux/features/user/userSlice';
+import { loginUser, setUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { extractStringsFromParentheses } from '../utils/utils';
 
@@ -36,14 +37,23 @@ export const SignIn = () => {
       loginUser({ email: formData.email, password: formData.password })
     ).then(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data: any) => {
-        console.log(data);
+      async (data: any) => {
+        // console.log(data);
         if (data?.error?.message) {
           toast(extractStringsFromParentheses(data?.error?.message));
         } else if (data?.payload) {
-          console.log(from);
+          // console.log(data?.payload);
           navigate(from, { replace: true });
-          toast(`Logged in successfully with: ${data?.payload}`);
+          toast(`Logged in successfully with: ${data?.payload?.email}`);
+          // await axios({
+          //   method: 'get',
+          //   url: `http://localhost:5000/api/v1/users/email/${formData.email}`,
+          // }).then((loginData) => {
+          //   console.log(loginData);
+          //   // setUser();
+          //   // navigate(from, { replace: true });
+          //   // toast(`Logged in successfully with: ${data?.payload}`);
+          // });
         }
       }
     );
