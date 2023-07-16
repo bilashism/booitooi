@@ -52,15 +52,25 @@ export const Navbar = () => {
                 </li>
               </>
             ) : (
-              <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
-                <button
-                  type="button"
-                  onClick={handleLogOut}
-                  className="cursor-pointer"
-                >
-                  Logout
-                </button>
-              </li>
+              <>
+                <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
+                  <NavLink
+                    to="/add-new-book"
+                    className="[&.active]:text-purple-800"
+                  >
+                    Add Book
+                  </NavLink>
+                </li>
+                <li className="hover:underline underline-offset-8 hover:text-purple-600 transition-colors active:text-purple-800">
+                  <button
+                    type="button"
+                    onClick={handleLogOut}
+                    className="cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </div>
