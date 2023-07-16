@@ -1,10 +1,53 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
+import { loginUser } from '../redux/features/user/userSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { extractStringsFromParentheses } from '../utils/utils';
 
+interface SigninFormInputs {
+  email: string;
+  password: string;
+}
 export const SignIn = () => {
-  const [dg, setdg] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SigninFormInputs>();
+  const dispatch = useAppDispatch();
+
+  const { user, isLoading } = useAppSelector((state) => state.user);
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || '/';
+  const navigate = useNavigate();
+
+  const onSubmit = (formData: SigninFormInputs) => {
+    dispatch(
+      loginUser({ email: formData.email, password: formData.password })
+    ).then(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (data: any) => {
+        console.log(data);
+        if (data?.error?.message) {
+          toast(extractStringsFromParentheses(data?.error?.message));
+        } else if (data?.payload) {
+          console.log(from);
+          navigate(from, { replace: true });
+          toast(`Logged in successfully with: ${data?.payload}`);
+        }
+      }
+    );
+  };
   return (
     <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
       <div className="container mx-auto">
@@ -13,14 +56,28 @@ export const SignIn = () => {
             <div className="mb-10 text-center md:mb-16">
               <Logo />
             </div>
-            <form>
-              <InputBox type="email" name="email" placeholder="Email" />
-              <InputBox
-                type="password"
-                name="password"
-                placeholder="Password"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
+              <input
+                type="email"
+                placeholder="Email"
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                {...register('email', {
+                  required: 'Please enter your email address',
+                })}
               />
-
+              {errors.email && <p>{errors.email.message}</p>}
+              <input
+                type="password"
+                placeholder="Password"
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                {...register('password', {
+                  required: 'Please enter your password',
+                })}
+              />
+              {errors.password && <p>{errors.password.message}</p>}
               <div className="mb-10">
                 <button
                   className="border-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition bg-purple-500 hover:bg-opacity-90"
@@ -326,22 +383,3 @@ export const SignIn = () => {
     </section>
   );
 };
-
-const InputBox = ({
-  type,
-  placeholder,
-  name,
-}: {
-  type: string;
-  placeholder: string;
-  name: string;
-}) => (
-  <div className="mb-6">
-    <input
-      type={type}
-      placeholder={placeholder}
-      name={name}
-      className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
-    />
-  </div>
-);

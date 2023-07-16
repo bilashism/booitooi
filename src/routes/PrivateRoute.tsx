@@ -20,6 +20,7 @@ export const PrivateRoute = ({ children }: IProps) => {
         state={{
           path: pathname,
         }}
+        replace
       />
     );
   }

@@ -5,12 +5,12 @@ import { App } from '../App';
 import { NotFound } from '../pages/NotFound';
 import { lazyNamed } from '../utils/lazyNamed';
 
-import { PrivateRoute } from './PrivateRoute';
-
+const PrivateRoute = lazyNamed('PrivateRoute', () => import('./PrivateRoute'));
 const Home = lazyNamed('Home', () => import('../pages/Home'));
 const SignIn = lazyNamed('SignIn', () => import('../pages/SignIn'));
 const SignUp = lazyNamed('SignUp', () => import('../pages/SignUp'));
 const AllBooks = lazyNamed('AllBooks', () => import('../pages/AllBooks'));
+const AddNewBook = lazyNamed('AddNewBook', () => import('../pages/AddNewBook'));
 
 export const router = createBrowserRouter([
   {
@@ -50,11 +50,13 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/private',
+        path: '/add-new-book',
         element: (
-          <PrivateRoute>
-            <h2>private route </h2>
-          </PrivateRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <PrivateRoute>
+              <AddNewBook />
+            </PrivateRoute>
+          </Suspense>
         ),
       },
     ],
