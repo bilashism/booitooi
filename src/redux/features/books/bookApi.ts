@@ -1,12 +1,17 @@
+import useAccessToken from '../../../hooks/useAccessToken';
 import { api } from '../../api/apiSlice';
+import { useAppSelector } from '../../hooks';
 
-const productsApi = api.injectEndpoints({
+const booksApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query({
-      query: () => '/products',
+    getBooks: builder.query({
+      query: () => ({
+        url: '/books',
+        method: 'GET',
+      }),
     }),
-    getSingleProduct: builder.query({
-      query: (id) => `/product/${id}`,
+    getSingleBook: builder.query({
+      query: (id) => `/books/${id}`,
     }),
     getComments: builder.query({
       query: (id) => `/comment/${id}`,
@@ -25,7 +30,7 @@ const productsApi = api.injectEndpoints({
 
 export const {
   useGetCommentsQuery,
-  useGetSingleProductQuery,
-  useGetProductsQuery,
+  useGetSingleBookQuery,
+  useGetBooksQuery,
   usePostCommentMutation,
-} = productsApi;
+} = booksApi;

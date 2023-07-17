@@ -38,7 +38,7 @@ function trimObjectProperties(
   );
 }
 
-const BOOK_GENRE_LIST: string[] = [
+export const BOOK_GENRE_LIST: string[] = [
   'Fantasy',
   'Science Fiction',
   'Mystery',

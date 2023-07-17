@@ -1,31 +1,73 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-type BookProps = {
-  book: {
-    name: string;
-  };
+
+export type IBookLabel = 'for sale' | 'sold out';
+
+export type IBookGenre =
+  | 'Fantasy'
+  | 'Science Fiction'
+  | 'Mystery'
+  | 'Thriller'
+  | 'Romance'
+  | 'Young Adult'
+  | 'Children'
+  | 'Literary Fiction'
+  | 'Historical'
+  | 'Dystopian';
+
+export type IBookFilters = {
+  searchTerm?: string;
+  maxPrice?: number;
+  minPrice?: number;
+};
+export type IBookReview = {
+  reviewer: string;
+  rating: number;
+  content: string;
+};
+export type IBook = {
+  id: string;
+  title: string;
+  author: string;
+  authorId: string;
+  description: string;
+  publicationDate: string;
+  genre: IBookGenre;
+  label?: IBookLabel;
+  reviews?: IBookReview[];
+};
+type BookCardProps = {
+  book: IBook;
 };
 
-export const BookCard = ({ book }: BookProps) => {
-  // console.log(book);
-  const { name } = book;
+export const BookCard = ({ book }: BookCardProps) => {
+  const { title, author, genre, publicationDate, description } = book;
   return (
-    <div className="max-w-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <a href="#">
+    <div className="max-w-xs w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      {/* <a href="#">
         <img
           className="rounded-t-lg"
           src="https://dummyimage.com/382x380.png"
           alt=""
         />
-      </a>
+      </a> */}
       <div className="p-5">
-        <a href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {name}
-          </h5>
-        </a>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Here are the biggest enterprise technology acquisitions of 2021 so
-          far, in reverse chronological order.
+        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <a href="#" className="">
+            {title}
+          </a>
+        </h5>
+        <h6 className="mb-2 text-lg tracking-tight text-gray-900 dark:text-white">
+          <small> by:</small>{' '}
+          <a href="#" className="hover:underline">
+            {author}
+          </a>
+        </h6>
+        <div className="flex flex-nowrap overflow-hidden text-gray-400 justify-between">
+          <p className="bg-lime-900/50 px-1">{genre}</p> |
+          <p className="">{publicationDate}</p>
+        </div>
+        <p className="py-3 font-normal text-gray-700 dark:text-gray-400">
+          {description}
         </p>
         <a
           href="#"

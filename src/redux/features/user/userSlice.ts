@@ -110,6 +110,8 @@ export const createUser = createAsyncThunk(
       uid: savedData.uid,
       accessToken: loginData?.data?.data?.accessToken,
     };
+    localStorage.setItem('accessToken', loginData?.data?.data?.accessToken);
+
     // eslint-disable-next-line consistent-return
     return validUser;
   }
@@ -144,6 +146,8 @@ export const loginUser = createAsyncThunk(
       uid: savedData.uid,
       accessToken: loginData?.data?.data?.accessToken,
     };
+    localStorage.setItem('accessToken', loginData?.data?.data?.accessToken);
+
     // eslint-disable-next-line consistent-return
     return validUser;
   }
