@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import axios from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -116,8 +117,10 @@ export const AddNewBook = () => {
               />
               {errors.author && <p>{errors.author.message}</p>}
               <datalist id="book-genre-datalist">
-                {BOOK_GENRE_LIST.map((genre) => (
-                  <option value={genre}>{genre}</option>
+                {BOOK_GENRE_LIST.map((genre, idx) => (
+                  <option key={idx + 1} value={genre}>
+                    {genre}
+                  </option>
                 ))}
               </datalist>
               <select
@@ -128,7 +131,9 @@ export const AddNewBook = () => {
               >
                 <option value="">Please select genre name</option>
                 {BOOK_GENRE_LIST.map((genre) => (
-                  <option value={genre}>{genre}</option>
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
                 ))}
               </select>
               {errors.genre && <p>{errors.genre.message}</p>}

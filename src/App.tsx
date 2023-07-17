@@ -19,7 +19,7 @@ export const App = () => {
     dispatch(setLoading(true));
     onAuthStateChanged(auth, async (user) => {
       if (user && user.email) {
-        console.log({ email: user.email, uid: user.uid });
+        // console.log({ email: user.email, uid: user.uid });
 
         const {
           data: { data: savedData },
