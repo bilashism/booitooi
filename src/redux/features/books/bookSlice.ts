@@ -7,11 +7,17 @@ interface IBookSlice {
   status: boolean;
   priceRange: number;
   books?: IBook[];
+  searchTerm: string;
+  searchGenre: string;
+  searchYear: string;
 }
 const initialState: IBookSlice = {
   status: false,
   priceRange: 150,
   books: undefined,
+  searchTerm: '',
+  searchGenre: '',
+  searchYear: '',
 };
 
 export const bookSlice = createSlice({
@@ -24,10 +30,22 @@ export const bookSlice = createSlice({
     setPriceRange: (state, action: PayloadAction<number>) => {
       state.priceRange = action.payload;
     },
-    setBooks: (state, action: PayloadAction<IBook[]>) => {
-      state.books = action.payload;
+    setSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
+    setSearchGenre: (state, action: PayloadAction<string>) => {
+      state.searchGenre = action.payload;
+    },
+    setSearchYear: (state, action: PayloadAction<string>) => {
+      state.searchYear = action.payload;
     },
   },
 });
-export const { toggleStatus, setPriceRange, setBooks } = bookSlice.actions;
+export const {
+  toggleStatus,
+  setPriceRange,
+  setSearchTerm,
+  setSearchGenre,
+  setSearchYear,
+} = bookSlice.actions;
 export const bookReducer = bookSlice.reducer;

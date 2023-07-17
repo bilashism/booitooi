@@ -1,34 +1,75 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeEvent, EventHandler, useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { ChangeEventHandler } from 'react';
 
 import { BookCard, IBook } from '../components/BookCard';
-import { BookSearch } from '../components/BookSearch';
 import { useGetBooksQuery } from '../redux/features/books/bookApi';
-import { setPriceRange } from '../redux/features/books/bookSlice';
+import {
+  setSearchGenre,
+  setSearchTerm,
+  setSearchYear,
+} from '../redux/features/books/bookSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+
+import { BOOK_GENRE_LIST } from './AddNewBook';
 
 interface BookSearchFormInputs {
   searchTerm: string;
 }
 export const AllBooks = () => {
-  const [productsData, setProductsData] = useState<IBook[]>();
   const { data, isLoading, error } = useGetBooksQuery(undefined);
-  const { status, priceRange } = useAppSelector((state) => state.book);
+  const { searchTerm, searchGenre, searchYear } = useAppSelector(
+    (state) => state.book
+  );
   const dispatch = useAppDispatch();
+  const uniqueYears = Array.from(
+    new Set(
+      data?.data?.map(
+        (item: IBook) => item.publicationDate.slice(0, 4) as string
+      )
+    )
+  ) as string[];
+  let books;
 
-  const [books, setBooks] = useState<IBook[]>([]);
+  const handleSearch: ChangeEventHandler<HTMLInputElement> = (ev) => {
+    dispatch(setSearchTerm(ev?.target.value));
+  };
+  const handleGenreChange: ChangeEventHandler<HTMLSelectElement> = (ev) => {
+    dispatch(setSearchGenre(ev.target.value));
+  };
+  const handleYearChange: ChangeEventHandler<HTMLSelectElement> = (ev) => {
+    dispatch(setSearchYear(ev.target.value));
+  };
+  books = data?.data;
 
-  const handleSearch = (query: string) => {
+  if (searchTerm) {
     const filteredBooks = data?.data?.filter(
       (book: IBook) =>
-        book.title.toLowerCase().includes(query.trim().toLowerCase()) ||
-        book.author.toLowerCase().includes(query.trim().toLowerCase()) ||
-        book.genre.toLowerCase().includes(query.trim().toLowerCase())
+        book.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+        book.genre.toLowerCase().includes(searchTerm.trim().toLowerCase())
     ) as IBook[];
-    console.log('handleSearch');
-    setBooks(filteredBooks);
-  };
+    books = filteredBooks;
+  }
+  if (searchGenre) {
+    const filteredBooks = data?.data?.filter((book: IBook) =>
+      book.genre.toLowerCase().includes(searchGenre.trim().toLowerCase())
+    ) as IBook[];
+    books = filteredBooks;
+  }
+  if (searchYear) {
+    const filteredBooks = data?.data?.filter((book: IBook) =>
+      book.publicationDate.includes(searchYear.trim().toLowerCase())
+    ) as IBook[];
+    books = filteredBooks;
+  }
+  if (searchGenre && searchYear) {
+    const filteredBooks = data?.data?.filter(
+      (book: IBook) =>
+        book.genre.toLowerCase().includes(searchGenre.trim().toLowerCase()) &&
+        book.publicationDate.includes(searchYear.trim().toLowerCase())
+    ) as IBook[];
+    books = filteredBooks;
+  }
 
   return (
     <section>
@@ -38,8 +79,53 @@ export const AllBooks = () => {
         </h2>
 
         <div className="flex 2xl:flex-nowrap gap-10">
-          <div className="max-w-xs w-full">
-            <BookSearch onSearch={handleSearch} />
+          <div className="max-w-xs w-full flex flex-col gap-4">
+            <div className="">
+              <input
+                type="text"
+                // list="book-genre-datalist"
+                className="w-full h-full border border-slate-300 px-4 py-2 rounded"
+                onChange={handleSearch}
+                placeholder="Search..."
+              />
+              {/* <datalist id="book-genre-datalist">
+                {BOOK_GENRE_LIST.map((genre) => (
+                  <option key={`${genre}`.replaceAll(' ', '')} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </datalist> */}
+            </div>
+            <h4 className="">Filters</h4>
+
+            <div className="">
+              <select
+                onChange={handleGenreChange}
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                name="filter-genre"
+              >
+                <option value="">Select genre</option>
+                {BOOK_GENRE_LIST.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="">
+              <select
+                onChange={handleYearChange}
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                name="filter-year"
+              >
+                <option value="">Select year</option>
+                {uniqueYears.map((year: string) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="w-full flex flex-wrap justify-start gap-16">
