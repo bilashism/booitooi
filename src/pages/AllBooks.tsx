@@ -26,6 +26,7 @@ export const AllBooks = () => {
         book.author.toLowerCase().includes(query.trim().toLowerCase()) ||
         book.genre.toLowerCase().includes(query.trim().toLowerCase())
     ) as IBook[];
+    console.log('handleSearch');
     setBooks(filteredBooks);
   };
 

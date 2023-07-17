@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
-import { BookCard } from '../components/BookCard';
+import { BookCard, IBook } from '../components/BookCard';
+import { useGetBooksQuery } from '../redux/features/books/bookApi';
 
 export const RecentlyAddedBooks = () => {
-  const [first, setFirst] = useState(0);
+  const { data, isLoading, error } = useGetBooksQuery(undefined);
+
   return (
     <section>
       <div className="container mx-auto px-4">
@@ -11,10 +13,11 @@ export const RecentlyAddedBooks = () => {
           Recently Added Books
         </h2>
         <div className="flex flex-wrap justify-center gap-16">
-          {Array.from(Array(10)).map((newItem, id) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <BookCard key={id + 1} book={{ name: `Book ${id + 1}` }} />
-          ))}
+          {!isLoading
+            ? data?.data
+                ?.slice(0, 10)
+                .map((book: IBook) => <BookCard key={book.id} book={book} />)
+            : false}
         </div>
       </div>
     </section>
