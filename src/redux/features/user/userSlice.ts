@@ -17,6 +17,7 @@ interface IUserState {
     uid: string;
     id: string;
     role: string;
+    accessToken: string;
   };
   isLoading: boolean;
   isError: boolean;
@@ -32,6 +33,7 @@ const initialState: IUserState = {
     uid: '',
     id: '',
     role: '',
+    accessToken: '',
   },
   isLoading: false,
   isError: false,
@@ -39,17 +41,17 @@ const initialState: IUserState = {
 };
 type IUserDB = {
   email: string;
-  password: string;
   role?: string;
   uid: string;
   emailVerified: boolean;
   displayName: string;
 };
-type IAuthenticatedUser = {
+export type IAuthenticatedUser = {
   uid: string;
   email: string;
   id: string;
   role: string;
+  accessToken: string;
 };
 // Check if a user exists with the provided email
 const checkUserExists = async (email: string): Promise<boolean> => {
@@ -80,7 +82,6 @@ export const createUser = createAsyncThunk(
     const newUser = await createUserWithEmailAndPassword(auth, email, password);
 
     const userDbData: IUserDB = {
-      password,
       uid: newUser.user.uid,
       email: newUser.user.email as string,
       emailVerified: newUser.user.emailVerified,
@@ -95,11 +96,19 @@ export const createUser = createAsyncThunk(
       data: userDbData,
     });
 
+    const loginData = await axios({
+      method: 'post',
+      url: 'http://localhost:5000/api/v1/auth/login',
+      data: { email: userDbData.email, uid: userDbData.uid },
+    });
+    if (!loginData?.data?.data?.accessToken) return;
+
     const validUser: IAuthenticatedUser = {
       email: savedData.email,
       id: savedData.id,
       role: savedData.role,
       uid: savedData.uid,
+      accessToken: loginData?.data?.data?.accessToken,
     };
     // eslint-disable-next-line consistent-return
     return validUser;
@@ -118,7 +127,7 @@ export const loginUser = createAsyncThunk(
     const loginData = await axios({
       method: 'post',
       url: 'http://localhost:5000/api/v1/auth/login',
-      data: { email, password },
+      data: { email: loggedInUser.user.email, uid: loggedInUser.user.uid },
     });
     if (!loginData?.data?.data?.accessToken) return;
     const {
@@ -133,6 +142,7 @@ export const loginUser = createAsyncThunk(
       id: savedData.id,
       role: savedData.role,
       uid: savedData.uid,
+      accessToken: loginData?.data?.data?.accessToken,
     };
     // eslint-disable-next-line consistent-return
     return validUser;
@@ -143,8 +153,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setUser: (state, action: PayloadAction<any | null>) => {
-      state.user = action.payload;
+    setUser: (state, action: PayloadAction<IAuthenticatedUser | null>) => {
+      state.user = action.payload as IAuthenticatedUser;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -161,6 +171,7 @@ export const userSlice = createSlice({
           uid: '',
           id: '',
           role: '',
+          accessToken: '',
         };
       })
       .addCase(createUser.fulfilled, (state, action) => {
@@ -173,7 +184,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message as string;
-        state.user = { email: '', uid: '', id: '', role: '' };
+        state.user = { email: '', uid: '', id: '', role: '', accessToken: '' };
       });
     builder
       .addCase(loginUser.pending, (state) => {
@@ -185,6 +196,7 @@ export const userSlice = createSlice({
           uid: '',
           id: '',
           role: '',
+          accessToken: '',
         };
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -197,7 +209,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message as string;
-        state.user = { email: '', uid: '', id: '', role: '' };
+        state.user = { email: '', uid: '', id: '', role: '', accessToken: '' };
       });
   },
 });

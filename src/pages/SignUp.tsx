@@ -35,18 +35,10 @@ export const SignUp = () => {
       async (data: any) => {
         if (data?.error?.message) {
           toast(extractStringsFromParentheses(data?.error?.message));
-          // toast(data?.error?.message);
-        } else {
-          await axios({
-            method: 'post',
-            url: 'http://localhost:5000/api/v1/auth/login',
-            data: { email: formData.email, password: formData.password },
-          }).then((loginData) => {
-            // console.log(loginData);
-            // setUser()
-            navigate(from, { replace: true });
-            toast(`Signed up successfully with: ${data?.payload?.email}`);
-          });
+        } else if (data?.payload) {
+          // console.log(data?.payload);
+          navigate(from, { replace: true });
+          toast(`Signed up successfully with: ${data?.payload?.email}`);
         }
       }
     );

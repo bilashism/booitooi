@@ -1,22 +1,42 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Logo } from '../components/Logo';
-import { createUser, setUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { extractStringsFromParentheses } from '../utils/utils';
-
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface AddNewBookFormInputs {
+  [key: string]: string | AddNewBookFormInputs;
   title: string;
   author: string;
+  authorId: string;
   genre: string;
   publicationDate: string;
+  description: string;
 }
+
+function trimObjectProperties(
+  formData: AddNewBookFormInputs
+): AddNewBookFormInputs {
+  return Object.keys(formData).reduce(
+    (trimmedData: AddNewBookFormInputs, key: string) => {
+      const value = formData[key];
+
+      if (typeof value === 'string') {
+        trimmedData[key] = value.trim();
+      } else if (typeof value === 'object' && value !== null) {
+        trimmedData[key] = trimObjectProperties(value);
+      } else {
+        trimmedData[key] = value;
+      }
+
+      return trimmedData;
+    },
+    {} as AddNewBookFormInputs
+  );
+}
+
 const BOOK_GENRE_LIST: string[] = [
   'Fantasy',
   'Science Fiction',
@@ -33,12 +53,26 @@ export const AddNewBook = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AddNewBookFormInputs>();
-  const dispatch = useAppDispatch();
-
+  const { user } = useAppSelector((state) => state.user);
   const onSubmit = (formData: AddNewBookFormInputs) => {
-    console.log(formData);
+    axios({
+      method: 'post',
+      url: `http://localhost:5000/api/v1/books/`,
+      headers: {
+        authorization: `${user.accessToken}`,
+      },
+      data: trimObjectProperties(formData),
+    })
+      .then((data) => {
+        toast(`${data?.data?.message}`);
+        reset();
+      })
+      .catch((error) => {
+        toast(`Something went wrong! ${error?.message}`);
+      });
   };
 
   return (
@@ -53,6 +87,16 @@ export const AddNewBook = () => {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-4"
             >
+              <input
+                type="hidden"
+                value={user.id}
+                readOnly
+                hidden
+                aria-hidden
+                {...register('authorId', {
+                  required: 'Please enter your author id',
+                })}
+              />
               <input
                 type="text"
                 placeholder="Book name"
@@ -76,15 +120,17 @@ export const AddNewBook = () => {
                   <option value={genre}>{genre}</option>
                 ))}
               </datalist>
-              <input
-                type="text"
-                list="book-genre-datalist"
-                placeholder="Genre"
+              <select
                 className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
                 {...register('genre', {
-                  required: 'Please enter genre name',
+                  required: 'Please select genre name',
                 })}
-              />
+              >
+                <option value="">Please select genre name</option>
+                {BOOK_GENRE_LIST.map((genre) => (
+                  <option value={genre}>{genre}</option>
+                ))}
+              </select>
               {errors.genre && <p>{errors.genre.message}</p>}
               <input
                 type="date"
@@ -92,11 +138,32 @@ export const AddNewBook = () => {
                 className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
                 {...register('publicationDate', {
                   required: 'Please enter publication date',
+                  pattern: {
+                    value: /^(0?[1-9]|[12]\d|3[01])-(0?[1-9]|1[0-2])-\d{4}$/,
+                    message: 'Date must be in the format DD-MM-YYYY',
+                  },
                 })}
               />
               {errors.publicationDate && (
                 <p>{errors.publicationDate.message}</p>
               )}
+              <textarea
+                placeholder="description"
+                className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
+                {...register('description', {
+                  required: 'Please enter description',
+                  minLength: {
+                    value: 2,
+                    message: 'Please enter description at least 2 characters',
+                  },
+                  maxLength: {
+                    value: 120,
+                    message:
+                      'Description more than 120 characters are not allowed',
+                  },
+                })}
+              />
+              {errors.description && <p>{errors.description.message}</p>}
               <div className="mb-10">
                 <button
                   className="border-primary w-full cursor-pointer rounded-md border bg-primary py-3 px-5 text-base text-white transition bg-purple-500 hover:bg-opacity-90"
