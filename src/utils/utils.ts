@@ -16,3 +16,15 @@ export const extractStringsFromParentheses = (text: string): string => {
   }
   return str;
 };
+export const BOOK_GENRE_LIST: string[] = [
+  'Fantasy',
+  'Science Fiction',
+  'Mystery',
+  'Thriller',
+  'Romance',
+  'Young Adult',
+  'Children',
+  'Literary Fiction',
+  'Historical',
+  'Dystopian',
+];

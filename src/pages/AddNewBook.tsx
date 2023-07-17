@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 
 import { Logo } from '../components/Logo';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { BOOK_GENRE_LIST } from '../utils/utils';
 
 interface AddNewBookFormInputs {
   [key: string]: string | AddNewBookFormInputs;
@@ -38,18 +39,6 @@ function trimObjectProperties(
   );
 }
 
-export const BOOK_GENRE_LIST: string[] = [
-  'Fantasy',
-  'Science Fiction',
-  'Mystery',
-  'Thriller',
-  'Romance',
-  'Young Adult',
-  'Children',
-  'Literary Fiction',
-  'Historical',
-  'Dystopian',
-];
 export const AddNewBook = () => {
   const {
     register,

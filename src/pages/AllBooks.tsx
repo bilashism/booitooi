@@ -9,8 +9,7 @@ import {
   setSearchYear,
 } from '../redux/features/books/bookSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-
-import { BOOK_GENRE_LIST } from './AddNewBook';
+import { BOOK_GENRE_LIST } from '../utils/utils';
 
 interface BookSearchFormInputs {
   searchTerm: string;

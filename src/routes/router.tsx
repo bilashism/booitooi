@@ -11,6 +11,7 @@ const SignIn = lazyNamed('SignIn', () => import('../pages/SignIn'));
 const SignUp = lazyNamed('SignUp', () => import('../pages/SignUp'));
 const AllBooks = lazyNamed('AllBooks', () => import('../pages/AllBooks'));
 const AddNewBook = lazyNamed('AddNewBook', () => import('../pages/AddNewBook'));
+const SingleBook = lazyNamed('SingleBook', () => import('../pages/SingleBook'));
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <AllBooks />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/books/:id',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SingleBook />
           </Suspense>
         ),
       },
