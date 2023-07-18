@@ -74,6 +74,14 @@ export const AllBooks = () => {
     books = filteredBooks;
   }
 
+  if (!(books?.length >= 1)) {
+    return (
+      <div className="text-center pt-20 font-bold text-red-500">
+        No books to show!
+      </div>
+    );
+  }
+
   return (
     <section>
       <div className="container mx-auto px-4">
@@ -81,7 +89,7 @@ export const AllBooks = () => {
           All Books
         </h2>
 
-        <div className="flex 2xl:flex-nowrap gap-10">
+        <div className="flex flex-wrap justify-center 2xl:flex-nowrap 2xl:justify-between gap-10">
           <div className="max-w-xs w-full flex flex-col gap-4">
             <div className="">
               <input
@@ -131,7 +139,7 @@ export const AllBooks = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-wrap justify-start gap-16">
+          <div className="w-full flex flex-wrap justify-center 2xl:justify-start gap-16">
             {!isLoading
               ? books?.map((book: IBook) => (
                   <BookCard key={book.id} book={book} />

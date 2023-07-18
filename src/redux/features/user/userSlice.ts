@@ -74,7 +74,7 @@ export const createUser = createAsyncThunk(
       data: { data: isInDb },
     } = await axios({
       method: 'get',
-      url: `http://localhost:5000/api/v1/users/check/${email}`,
+      url: `https://booitooi.vercel.app/api/v1/users/check/${email}`,
     });
 
     if (isInFirebase && isInDb) return;
@@ -92,13 +92,13 @@ export const createUser = createAsyncThunk(
       data: { data: savedData },
     } = await axios({
       method: 'post',
-      url: 'http://localhost:5000/api/v1/auth/signup',
+      url: 'https://booitooi.vercel.app/api/v1/auth/signup',
       data: userDbData,
     });
 
     const loginData = await axios({
       method: 'post',
-      url: 'http://localhost:5000/api/v1/auth/login',
+      url: 'https://booitooi.vercel.app/api/v1/auth/login',
       data: { email: userDbData.email, uid: userDbData.uid },
     });
     if (!loginData?.data?.data?.accessToken) return;
@@ -128,7 +128,7 @@ export const loginUser = createAsyncThunk(
 
     const loginData = await axios({
       method: 'post',
-      url: 'http://localhost:5000/api/v1/auth/login',
+      url: 'https://booitooi.vercel.app/api/v1/auth/login',
       data: { email: loggedInUser.user.email, uid: loggedInUser.user.uid },
     });
     if (!loginData?.data?.data?.accessToken) return;
@@ -136,7 +136,7 @@ export const loginUser = createAsyncThunk(
       data: { data: savedData },
     } = await axios({
       method: 'get',
-      url: `http://localhost:5000/api/v1/users/email/${email}`,
+      url: `https://booitooi.vercel.app/api/v1/users/email/${email}`,
     });
 
     const validUser: IAuthenticatedUser = {

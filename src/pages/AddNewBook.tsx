@@ -50,7 +50,7 @@ export const AddNewBook = () => {
   const onSubmit = (formData: AddNewBookFormInputs) => {
     axios({
       method: 'post',
-      url: `http://localhost:5000/api/v1/books/`,
+      url: `https://booitooi.vercel.app/api/v1/books/`,
       headers: {
         authorization: `${user.accessToken}`,
       },

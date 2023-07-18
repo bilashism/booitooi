@@ -10,6 +10,14 @@ export const RecentlyAddedBooks = () => {
     refetchOnReconnect: true,
   });
 
+  if (!(data?.data?.length >= 1)) {
+    return (
+      <div className="text-center pt-20 font-bold text-red-500">
+        No books to show!
+      </div>
+    );
+  }
+
   return (
     <section>
       <div className="container mx-auto px-4">

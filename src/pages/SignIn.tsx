@@ -47,7 +47,7 @@ export const SignIn = () => {
           toast(`Logged in successfully with: ${data?.payload?.email}`);
           // await axios({
           //   method: 'get',
-          //   url: `http://localhost:5000/api/v1/users/email/${formData.email}`,
+          //   url: `https://booitooi.vercel.app/api/v1/users/email/${formData.email}`,
           // }).then((loginData) => {
           //   console.log(loginData);
           //   // setUser();

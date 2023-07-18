@@ -33,6 +33,13 @@ const booksApi = api.injectEndpoints({
         invalidatesTags: ['books'],
       }),
     }),
+    deleteBook: builder.mutation({
+      query: ({ id }) => ({
+        url: `/books/${id}`,
+        method: 'DELETE',
+        invalidatesTags: ['books'],
+      }),
+    }),
   }),
 });
 
@@ -42,4 +49,5 @@ export const {
   useGetReviewsQuery,
   usePostReviewMutation,
   useUpdateBookMutation,
+  useDeleteBookMutation,
 } = booksApi;

@@ -25,12 +25,12 @@ export const App = () => {
           data: { data: savedData },
         } = await axios({
           method: 'get',
-          url: `http://localhost:5000/api/v1/users/email/${user.email}`,
+          url: `https://booitooi.vercel.app/api/v1/users/email/${user.email}`,
         });
 
         const loginData = await axios({
           method: 'post',
-          url: 'http://localhost:5000/api/v1/auth/login',
+          url: 'https://booitooi.vercel.app/api/v1/auth/login',
           data: { email: user.email, uid: user.uid },
         });
         if (!loginData?.data?.data?.accessToken) return;
