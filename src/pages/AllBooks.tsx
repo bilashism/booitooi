@@ -15,7 +15,11 @@ interface BookSearchFormInputs {
   searchTerm: string;
 }
 export const AllBooks = () => {
-  const { data, isLoading, error } = useGetBooksQuery(undefined);
+  const { data, isLoading, error } = useGetBooksQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
   const { searchTerm, searchGenre, searchYear } = useAppSelector(
     (state) => state.book
   );

@@ -4,7 +4,11 @@ import { BookCard, IBook } from '../components/BookCard';
 import { useGetBooksQuery } from '../redux/features/books/bookApi';
 
 export const RecentlyAddedBooks = () => {
-  const { data, isLoading, error } = useGetBooksQuery(undefined);
+  const { data, isLoading, error } = useGetBooksQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
 
   return (
     <section>
