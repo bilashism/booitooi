@@ -132,10 +132,10 @@ export const AddNewBook = () => {
                 className="border-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none focus:border-primary focus-visible:shadow-none"
                 {...register('publicationDate', {
                   required: 'Please enter publication date',
-                  pattern: {
-                    value: /^(0?[1-9]|[12]\d|3[01])-(0?[1-9]|1[0-2])-\d{4}$/,
-                    message: 'Date must be in the format DD-MM-YYYY',
-                  },
+                  // pattern: {
+                  //   value: /^(0?[1-9]|[12]\d|3[01])-(0?[1-9]|1[0-2])-\d{4}$/,
+                  //   message: 'Date must be in the format DD-MM-YYYY',
+                  // },
                 })}
               />
               {errors.publicationDate && (

@@ -1,6 +1,4 @@
-import useAccessToken from '../../../hooks/useAccessToken';
 import { api } from '../../api/apiSlice';
-import { useAppSelector } from '../../hooks';
 
 const booksApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,25 +10,26 @@ const booksApi = api.injectEndpoints({
     }),
     getSingleBook: builder.query({
       query: (id) => `/books/${id}`,
+      providesTags: ['reviews'],
     }),
-    getComments: builder.query({
-      query: (id) => `/comment/${id}`,
-      providesTags: ['comment'],
+    getReviews: builder.query({
+      query: (id) => `/books/reviews/${id}`,
+      providesTags: ['reviews'],
     }),
-    postComment: builder.mutation({
+    postReview: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/comment/${id}`,
+        url: `/books/reviews`,
         method: 'POST',
         body: data,
+        invalidatesTags: ['reviews'],
       }),
-      invalidatesTags: ['comment'],
     }),
   }),
 });
 
 export const {
-  useGetCommentsQuery,
-  useGetSingleBookQuery,
   useGetBooksQuery,
-  usePostCommentMutation,
+  useGetSingleBookQuery,
+  useGetReviewsQuery,
+  usePostReviewMutation,
 } = booksApi;
