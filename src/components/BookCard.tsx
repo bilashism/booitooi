@@ -63,7 +63,7 @@ export const BookCard: FC<BookCardProps> = ({ book }) => {
           <small> by:</small> <span className="hover:underline">{author}</span>
         </h6>
         <div className="flex flex-nowrap overflow-hidden text-gray-400 justify-between">
-          <p className="bg-lime-900/50 px-1">{genre}</p> |
+          <p className="bg-lime-900 px-1">{genre}</p> |
           <p className="">{publicationDate}</p>
         </div>
         <p className="py-3 font-normal text-gray-700 dark:text-gray-400">

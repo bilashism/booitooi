@@ -74,14 +74,6 @@ export const AllBooks = () => {
     books = filteredBooks;
   }
 
-  if (!(books?.length >= 1)) {
-    return (
-      <div className="text-center pt-20 font-bold text-red-500">
-        No books to show!
-      </div>
-    );
-  }
-
   return (
     <section>
       <div className="container mx-auto px-4">
@@ -145,6 +137,13 @@ export const AllBooks = () => {
                   <BookCard key={book.id} book={book} />
                 ))
               : false}
+            {!(books?.length >= 1) ? (
+              <div className="text-center w-full h-full pt-20 font-bold text-red-500">
+                No books to show!
+              </div>
+            ) : (
+              false
+            )}
           </div>
         </div>
       </div>
